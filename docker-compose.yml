@@ -8,9 +8,11 @@ services:
       - '.:/var/www/html'
 
   php-fpm:
-    build: /home/selmeg/projects/first_project/Docker/php
+    build: ./Docker
     volumes:
       - .:/var/www/html
+
+
   postgres:
     image: postgres:13
     container_name: postgres_db

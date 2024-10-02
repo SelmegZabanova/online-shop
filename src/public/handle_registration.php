@@ -49,7 +49,7 @@ if(empty($errors)) {
     $stmt->execute(['name' => $name, 'email' => $email, 'password' => $hash]);
     $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
     $stmt->execute(['email' => $email]);
-    print_r($stmt->fetch());
+    header("Location: /login");
 } else {
-    require_once './get_registration.php';
+    require_once '/registrate';
 }

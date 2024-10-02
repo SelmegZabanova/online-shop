@@ -12,11 +12,11 @@
     <!-- SE CONNECTER / S'INSCRIRE -->
     <div class="login_register">
         <a href="#" class="login" target="blank">Login</a>
-        <a href="./get_registration.php" class="register" target="blank">Signup</a>
+        <a href="./registrate" class="register" target="blank">Signup</a>
     </div>
 
     <!-- FORMULAIRE -->
-    <form class="form" action="handle_login.php" method="post">
+    <form class="form" action="/login" method="post">
         <label style="color: red">
             <?php if(isset($errors['email'])){
                 print_r($errors['email']);

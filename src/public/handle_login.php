@@ -20,8 +20,10 @@ if(empty($errors)) {
     $stmt->execute(['email' => $email]);
     $result = $stmt->fetch();
     if (!empty($result) and password_verify($pass, $result['password'])) {
-       setcookie('user_id', $result['id']);
-        return;
+//       setcookie('user_id', $result['id']);
+        session_start();
+        $_SESSION['user_id'] = $result['id'];
+        header('Location: /catalog');
     } else {
         $errors['wrong_pass'] = 'неправильный пароль или почта';
 

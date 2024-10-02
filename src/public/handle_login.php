@@ -20,11 +20,12 @@ if(empty($errors)) {
     $stmt->execute(['email' => $email]);
     $result = $stmt->fetch();
     if (!empty($result) and password_verify($pass, $result['password'])) {
-        print_r('ok');
+       setcookie('user_id', $result['id']);
+        return;
     } else {
         $errors['wrong_pass'] = 'неправильный пароль или почта';
-        require_once './get_login.php';
+
     }
-}else{
+}
+
     require_once './get_login.php';
-};

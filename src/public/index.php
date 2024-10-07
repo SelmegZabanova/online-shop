@@ -18,7 +18,16 @@ if($requestUri === '/login') {
 }
 }elseif ($requestUri === '/catalog') {
     require_once './catalog.php';
-}else{
+}elseif($requestUri === '/add_product') {
+        if($requestMethod === 'GET') {
+            require_once './get_add_product.php';
+        } elseif($requestMethod === 'POST') {
+            require_once './handle_add_product.php';
+        }
+    }elseif($requestUri === '/cart') {
+    require_once './cart.php';
+} else{
     http_response_code(404);
     require_once './404.php';
 }
+

@@ -20,15 +20,22 @@ if(!isset($_SESSION['user_id'])) {
                 <div class="card-header">
                     Hit!
                 </div>
-                <img class="card-img-top" src="./images/mixsoon.jpg" alt="Card image">
+                <img class="card-img-top" src="<?php $product['image']; ?> " alt="Card image">
                 <div class="card-body">
                     <p class="card-text text-muted"> <?= $product['description']; ?></p>
-                    <a href="#"><h5 class="card-title"> <?= print_r($product['name']); ?> </h5></a>
+                    <a href="#"><h5 class="card-title"> <?= ($product['name']); ?> </h5></a>
                     <div class="card-footer">
                         <?php print_r($product['price']); ?>
                     </div>
                 </div>
             </a>
+            <form action="/add_product" method="post">
+                <input type ="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                <label>
+                <input type="number" name="amount" value="1" min="1" max="100" >
+            </label>
+                <input type="submit" value="Добавить в корзину">
+            </form>
         </div>
         <?php endforeach;?>
     </div>

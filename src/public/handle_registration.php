@@ -51,5 +51,5 @@ if(empty($errors)) {
     $stmt->execute(['email' => $email]);
     header("Location: /login");
 } else {
-    require_once '/registrate';
+    require_once './get_registration.php';
 }

@@ -18,22 +18,17 @@
     <!-- FORMULAIRE -->
     <form class="form" action="/login" method="post">
         <label style="color: red">
-            <?php if(isset($errors['email'])){
-                print_r($errors['email']);
-            }
-            ?>
+            <?php
+            if(isset($errors['email'])) {
+                print_r ($errors['email']); } ?>
         </label>
         <input type="text" placeholder="Email Address" class="email" name="email">
         <label style="color: red">
-            <?php if(isset($errors['pass'])){
-                print_r($errors['pass']);
-            }else{
-            if(isset($errors['wrong_pass'])){
-                print_r($errors['wrong_pass']);
-            };};
-            ?>
+            <?php
+            if(isset($errors['password'])) {
+                print_r ($errors['password']); } ?>
         </label>
-        <input type="password" placeholder="password" class="pass" name="pass">
+        <input type="password" placeholder="password" class="password" name="password">
         <button type="submit" class="login_btn">Login</button>
     </form>
 </div>

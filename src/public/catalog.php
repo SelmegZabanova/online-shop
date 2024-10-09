@@ -1,15 +1,15 @@
 <?php
-session_start();
-if(!isset($_SESSION['user_id'])) {
-  header("Location:/login");
-} else {
-
-    $pdo = new PDO('pgsql:host=postgres_db;port=5432;dbname=mydb', 'user', 'pass');
-
-    $stmt = $pdo->query("SELECT * FROM products");
-    $products = $stmt->fetchAll();
-}
-?>
+//session_start();
+//if(!isset($_SESSION['user_id'])) {
+//  header("Location:/login");
+//} else {
+//
+//    $pdo = new PDO('pgsql:host=postgres_db;port=5432;dbname=mydb', 'user', 'pass');
+//
+//    $stmt = $pdo->query("SELECT * FROM products");
+//    $products = $stmt->fetchAll();
+//}
+//?>
 
 <div class="container">
     <h3>Catalog</h3>
@@ -20,7 +20,7 @@ if(!isset($_SESSION['user_id'])) {
                 <div class="card-header">
                     Hit!
                 </div>
-                <img class="card-img-top" src="<?php $product['image']; ?> " alt="Card image">
+                <img class="card-img-top" src="<?= $product['image']; ?> " alt="Card image">
                 <div class="card-body">
                     <p class="card-text text-muted"> <?= $product['description']; ?></p>
                     <a href="#"><h5 class="card-title"> <?= ($product['name']); ?> </h5></a>
@@ -37,6 +37,32 @@ if(!isset($_SESSION['user_id'])) {
                 <input type="submit" value="Добавить в корзину">
             </form>
         </div>
+        <?php endforeach;?>
+    </div>
+    <div class="card-deck">
+        <?php foreach ($products as $product):?>
+            <div class="card text-center">
+                <a href="#">
+                    <div class="card-header">
+                        Hit!
+                    </div>
+                    <img class="card-img-top" src="<?= $product['image']; ?> " alt="Card image">
+                    <div class="card-body">
+                        <p class="card-text text-muted"> <?= $product['description']; ?></p>
+                        <a href="#"><h5 class="card-title"> <?= ($product['name']); ?> </h5></a>
+                        <div class="card-footer">
+                            <?php print_r($product['price']); ?>
+                        </div>
+                    </div>
+                </a>
+                <form action="/add_product" method="post">
+                    <input type ="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                    <label>
+                        <input type="number" name="amount" value="1" min="1" max="100" >
+                    </label>
+                    <input type="submit" value="Добавить в корзину">
+                </form>
+            </div>
         <?php endforeach;?>
     </div>
 </div>

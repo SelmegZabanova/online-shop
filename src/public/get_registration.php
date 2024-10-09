@@ -6,25 +6,36 @@
 
         <label for="name"><b>Name</b></label>
         <label style="color: red">
-            <?php if(isset($errors['name'])){ print_r ($errors['name']); } ?>
+            <?php
+            if(isset($errors['name'])) {
+                print_r ($errors['name']); } ?>
         </label>
         <input type="text" placeholder="Enter Name" name="name" id="name" required>
 
         <label for="email"><b>Email</b></label>
         <label style="color: red">
-        <?php if(isset($errors['email'])){ print_r ($errors['email']); } ?>
+            <?php
+
+            if(isset($errors['email'])) {
+                print_r ($errors['email']); } ?>
         </label>
         <input type="text" placeholder="Enter Email" name="email" id="email" required>
 
         <label for="psw"><b>Password</b></label>
         <label style="color: red">
-        <?php if(isset($errors['psw'])){ print_r ($errors['psw']); } ?>
+            <?php
+
+            if(isset($errors['password'])) {
+                print_r ($errors['password']); } ?>
         </label>
         <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
 
         <label for="psw-repeat"><b>Repeat Password</b></label>
         <label style="color: red">
-        <?php if(isset($errors['psw-repeat'])){ print_r ($errors['psw-repeat']); } ?>
+            <?php
+
+            if(isset($errors['password-repeat'])) {
+                print_r ($errors['password-repeat']); } ?>
         </label>
         <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
         <hr>

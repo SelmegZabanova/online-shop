@@ -1,18 +1,18 @@
 <?php
-include './classes/index.php';
+include './../Controller/IndexController.php';
 $requestUri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
-$Index = new Index($requestMethod, $requestUri);
+$IndexController = new IndexController($requestMethod, $requestUri);
 if($requestUri === '/registrate') {
-    $Index->registrate();
+    $IndexController->registrate();
 } elseif($requestUri === '/login') {
-    $Index->login();
+    $IndexController->login();
 } elseif($requestUri === '/catalog') {
-    $Index->getCatalog();
+    $IndexController->getCatalog();
 } elseif($requestUri === '/add_product') {
-    $Index->addProduct();
+    $IndexController->addProduct();
 } elseif($requestUri === '/cart') {
-    $Index->openCart();
+    $IndexController->openCart();
 } else {
     http_response_code(404);
     require_once './404.php';

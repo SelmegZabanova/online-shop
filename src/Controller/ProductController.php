@@ -1,4 +1,6 @@
 <?php
+require_once './../Model/Product.php';
+require_once './../Model/UserProduct.php';
 class ProductController
 {
     public function getCatalog()
@@ -7,7 +9,6 @@ class ProductController
         if (!isset($_SESSION['user_id'])) {
             header("Location:/login");
         } else {
-            require_once './../Model/Product.php';
             $product = new Product();
             $products = $product->showCatalog();
 
@@ -26,7 +27,6 @@ class ProductController
             } else {
                 $amount = $_POST['amount'];
             }
-            require_once './../Model/UserProduct.php';
             $userProduct = new UserProduct();
             $result = $userProduct->select($user_id, $product_id);
             if(empty($result)) {
@@ -34,7 +34,7 @@ class ProductController
             } else {
                $userProduct->addMore($user_id, $product_id, $amount);
             }
-            require_once './../View/catalog.php';
+            header("Location:/catalog");
         }
     }
 

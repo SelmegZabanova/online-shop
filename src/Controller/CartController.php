@@ -1,4 +1,5 @@
 <?php
+require_once '../Model/Product.php';
 class CartController
 {
     public function getCart()
@@ -8,9 +9,9 @@ class CartController
             header("Location: /login");
         } else {
             $user_id = $_SESSION['user_id'];
-            require_once '../Model/Product.php';
             $product = new Product();
             $data = $product->showCart($user_id);
+            $result = $product->getTotalPrice();
         }
         require_once './../View/cart.php';
     }

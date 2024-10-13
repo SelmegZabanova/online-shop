@@ -12,10 +12,14 @@
                             <?php echo $product['price']; ?>
                         </div>
                         <p class="card-text text-muted"><?php echo $product['amount']; ?></p>
+                        <?php endforeach; ?>
                     </div>
+                    <h2><?php echo  'Total Price ' . $result.'$'; ?></h2>
+
+                    <a href="./order" class="register" target="blank">Order</a>
                 </a>
             </div>
-        <?php endforeach; ?>
+
     </div>
 </div>
 

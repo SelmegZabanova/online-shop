@@ -26,7 +26,8 @@
         <label style="color: red">
             <?php
             if(isset($errors['password'])) {
-                print_r ($errors['password']); } ?>
+                print_r ($errors['password']);
+            }?>
         </label>
         <input type="password" placeholder="password" class="password" name="password">
         <button type="submit" class="login_btn">Login</button>

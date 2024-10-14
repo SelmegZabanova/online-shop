@@ -2,7 +2,7 @@
 <div class="container">
     <h3>Корзина</h3>
     <div class="card-deck">
-        <?php foreach ($data as $product): ?>
+        <?php foreach ($productsInCart as $product): ?>
             <div class="card text-center">
                 <a href="#">
                     <img class="card-img-top" src="<?php echo $product['image']; ?>" alt="Card image">
@@ -14,7 +14,7 @@
                         <p class="card-text text-muted"><?php echo $product['amount']; ?></p>
                         <?php endforeach; ?>
                     </div>
-                    <h2><?php echo  'Total Price ' . $result.'$'; ?></h2>
+                    <h2><?php echo  'Total Price ' . $totalPrice.'$'; ?></h2>
 
                     <a href="./order" class="register" target="blank">Order</a>
                 </a>

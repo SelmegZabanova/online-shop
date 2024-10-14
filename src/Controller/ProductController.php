@@ -3,14 +3,21 @@ require_once './../Model/Product.php';
 require_once './../Model/UserProduct.php';
 class ProductController
 {
+    private Product $product;
+    private UserProduct $userProduct;
+    public function __construct()
+    {
+        $this->product = new Product();
+        $this->userProduct = new UserProduct();
+    }
     public function getCatalog()
     {
         session_start();
         if (!isset($_SESSION['user_id'])) {
             header("Location:/login");
         } else {
-            $product = new Product();
-            $products = $product->showCatalog();
+
+            $products = $this->product->showCatalog();
 
         }
         require_once './../View/catalog.php';
@@ -27,12 +34,12 @@ class ProductController
             } else {
                 $amount = $_POST['amount'];
             }
-            $userProduct = new UserProduct();
-            $result = $userProduct->select($user_id, $product_id);
+
+            $result = $this->userProduct->select($user_id, $product_id);
             if(empty($result)) {
-                $userProduct->add($user_id, $product_id, $amount);
+                $this->userProduct->add($user_id, $product_id, $amount);
             } else {
-               $userProduct->addMore($user_id, $product_id, $amount);
+               $this->userProduct->addMore($user_id, $product_id, $amount);
             }
             header("Location:/catalog");
         }

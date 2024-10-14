@@ -2,6 +2,11 @@
 require_once '../Model/Product.php';
 class CartController
 {
+    private Product $product;
+    public function __construct()
+    {
+        $this->product = new Product();
+    }
     public function getCart()
     {
         session_start();
@@ -9,9 +14,9 @@ class CartController
             header("Location: /login");
         } else {
             $user_id = $_SESSION['user_id'];
-            $product = new Product();
-            $data = $product->showCart($user_id);
-            $result = $product->getTotalPrice();
+
+            $productsInCart = $this->product->showCart($user_id);
+            $totalPrice = $this->product->getTotalPrice();
         }
         require_once './../View/cart.php';
     }

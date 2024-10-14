@@ -6,52 +6,72 @@ require_once '../Controller/OrderController.php';
 
 class App
 {
+    private array $routes = [
+        '/login' => [
+            'GET' => [
+                'class' => 'UserController',
+                'method' => 'getLoginForm' ,
+            ],
+            'POST' => [
+                'class' => 'UserController',
+                'method' => 'login' ,
+            ]
+        ],
+        '/registrate' => [
+            'GET' => [
+                'class' => 'UserController',
+                'method' => 'getRegisterForm' ,
+            ],
+            'POST' => [
+                'class' => 'UserController',
+                'method' => 'register' ,
+            ]
+        ],
+        '/catalog' => [
+            'GET' => [
+                'class' => 'ProductController',
+                'method' => 'getCatalog' ,
+            ],
+            'POST' => [
+                'class' => 'ProductController',
+                'method' => 'addProduct' ,
+            ]
+            ],
+        '/cart' => [
+            'GET' => [
+                'class' => 'CartController',
+                'method' => 'getCart' ,
+            ]
+            ],
+        '/order' => [
+            'GET' => [
+                'class' => 'OrderController',
+                'method' => 'getOrderForm' ,
+            ],
+            'POST' => [
+                'class' => 'OrderController',
+                'method' => 'createOrder' ,
+            ]
+            ]
+        ];
+
+
     public function run()
     {
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
 
-        if ($requestUri === '/login') {
-            if ($requestMethod === 'GET') {
-                $UserController = new UserController();
-                $UserController->getLoginForm();
-            } elseif ($requestMethod === 'POST') {
-                $UserController = new UserController();
-                $UserController->login();
-            } else {
-                echo "$requestMethod не поддерживается";
-            }
-        } elseif ($requestUri === '/registrate') {
-            if ($requestMethod === 'GET') {
-                $UserController = new UserController();
-                $UserController->getRegisterForm();
-            } elseif ($requestMethod === 'POST') {
-                $UserController = new UserController();
-                $UserController->register();
-            }
-        } elseif ($requestUri === '/catalog') {
-            $ProductController = new ProductController();
-            $ProductController->getCatalog();
-        } elseif ($requestUri === '/add_product') {
-            if ($requestMethod === 'POST') {
-                $ProductController = new ProductController();
-                $ProductController->addProduct();
-            }
-        } elseif ($requestUri === '/cart') {
-            $CartController = new CartController();
-            $CartController->getCart();
-        } elseif ($requestUri === '/order') {
-            if ($requestMethod === 'GET') {
-                $OrderController = new OrderController();
-                $OrderController->getOrderForm();
-            } elseif ($requestMethod === 'POST') {
-                $OrderController = new OrderController();
-                $OrderController->createOrder();
+        if(array_key_exists($requestUri, $this->routes)) {
+            if(array_key_exists($requestMethod, $this->routes[$requestUri])) {
+
+                $object = new $this->routes[$requestUri][$requestMethod]['class'];
+                $method = $this->routes[$requestUri][$requestMethod]['method'];
+                $object->$method();
             }
         } else {
             http_response_code(404);
             require_once './404.php';
         }
-
     }
-}
+
+};

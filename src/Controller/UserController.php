@@ -3,6 +3,11 @@ require_once './../Model/User.php';
 
 class UserController
 {
+    private User $user;
+    public function __construct()
+    {
+        $this->user = new User();
+    }
  public function getRegisterForm()
  {
      require_once './../View/registrate.php';
@@ -18,8 +23,8 @@ class UserController
             $email = $_POST['email'];
             $password = $_POST['psw'];
             $hash = password_hash($password, PASSWORD_DEFAULT);
-            $user = new User();
-            $user->create($name, $email, $hash);
+
+            $this->user->create($name, $email, $hash);
 
             header("Location: /login");
         } else {
@@ -69,8 +74,8 @@ class UserController
         if (empty($errors)) {
             $email = $_POST['email'];
             $password = $_POST['password'];
-            $user = new User();
-            $result = $user->getByEmail($email);
+
+            $result = $this->user->getByEmail($email);
 
             if (!empty($result) and password_verify($password, $result['password'])) {
                 session_start();

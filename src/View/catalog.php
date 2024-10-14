@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </a>
-            <form action="/add_product" method="post">
+            <form action="/catalog" method="post">
                 <input type ="hidden" name="product_id" value="<?php echo $product['id']; ?>">
                 <label>
                 <input type="number" name="amount" value="1" min="1" max="100" >

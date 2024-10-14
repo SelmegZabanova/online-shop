@@ -42,14 +42,14 @@
         </div>
         <h2>Order Information</h2>
         <div class="row">
-            <?php foreach ($data as $product): ?>
+            <?php foreach ($productsInCart as $product): ?>
             <h3> Products to order:<?php echo $product['name']; ?></h3>
 
         </div>
         <div class="row">
             <h3>Amount: <?php echo $product['amount']; ?></h3>
             <?php endforeach; ?>
-            <h2> Total price: <?php echo $result . '$'; ?></h2>
+            <h2> Total price: <?php echo $totalPrice . '$'; ?></h2>
 
         </div>
 

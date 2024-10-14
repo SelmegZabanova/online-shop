@@ -3,6 +3,15 @@ require_once './../Model/Order.php';
 require_once './../Model/ProductsInOrder.php';
 class OrderController
 {
+    private Product $product;
+    private Order $order;
+    private ProductsInOrder $productsInOrder;
+    public function __construct()
+    {
+        $this->product = new Product();
+        $this->order = new Order();
+        $this->productsInOrder = new ProductsInOrder();
+    }
 public function getOrderForm()
 {
     session_start();
@@ -10,9 +19,9 @@ public function getOrderForm()
         header("Location: /login");
     } else {
         $user_id = $_SESSION['user_id'];
-        $product = new Product();
-        $data = $product->showCart($user_id);
-        $result = $product->getTotalPrice();
+
+        $productsInCart = $this->product->showCart($user_id);
+        $totalPrice = $this->product->getTotalPrice();
     }
     require_once './../View/order.php';
 }
@@ -20,23 +29,23 @@ public function createOrder()
 {
     session_start();
     $user_id = $_SESSION['user_id'];
-    $product = new Product();
+
     $errors = $this->validateOrder($_POST);
-    $data = $product->showCart($user_id);
+    $productsInCart = $this->product->showCart($user_id);
 
     if(empty($errors)) {
-        if(isset($data))
+        if(isset($productsInCart))
         {
             $name = $_POST['name'];
             $email = $_POST['email'];
             $phone = $_POST['phone'];
-            $sum = $product->getTotalPrice();
-            $Order = new Order();
-            $order_id = $Order->createOrder($user_id , $name, $email, $phone, $sum);
-            $data = $product->showCart($user_id);
-            foreach( $data as $value) {
-                $ProductInOrder = new ProductsInOrder();
-                $ProductInOrder->GetProductsInOrder($order_id, $value['product_id'],$value['amount']);
+            $sum = $this->product->getTotalPrice();
+
+            $order_id = $this->order->createOrder($user_id , $name, $email, $phone, $sum);
+            $productsInCart = $this->product->showCart($user_id);
+            foreach( $productsInCart as $value) {
+
+                $this->productsInOrder->GetProductsInOrder($order_id, $value['product_id'],$value['amount']);
 
             }
 
@@ -47,9 +56,9 @@ public function createOrder()
     } else {
         session_start();
         $user_id = $_SESSION['user_id'];
-        $product = new Product();
-        $data = $product->showCart($user_id);
-        $result = $product->getTotalPrice();
+
+        $productsInCart = $this->product->showCart($user_id);
+        $totalPrice = $this->product->getTotalPrice();
         require_once './../View/order.php';
     }
 }

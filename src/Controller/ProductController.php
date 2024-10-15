@@ -1,6 +1,9 @@
 <?php
-require_once './../Model/Product.php';
-require_once './../Model/UserProduct.php';
+//require_once './../Model/Product.php';
+//require_once './../Model/UserProduct.php';
+namespace Controller;
+use Model\Product;
+use Model\UserProduct;
 class ProductController
 {
     private Product $product;

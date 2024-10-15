@@ -1,55 +1,67 @@
 <?php
-require_once '../Controller/UserController.php';
-require_once '../Controller/ProductController.php';
-require_once '../Controller/CartController.php';
-require_once '../Controller/OrderController.php';
+
+$autoload = function ( string $className) {
+   $array = explode("\\", $className);
+   $nameSpace = $array[0];
+   $class = $array[1];
+   $path = "./../$nameSpace/$class.php";
+    if(file_exists($path)) {
+        require_once $path;
+
+        return true;
+    }
+
+    return false;
+};
+
+spl_autoload_register($autoload);
 
 class App
 {
     private array $routes = [
         '/login' => [
             'GET' => [
-                'class' => 'UserController',
+                'class' => 'Controller\UserController',
                 'method' => 'getLoginForm' ,
             ],
             'POST' => [
-                'class' => 'UserController',
+                'class' => 'Controller\UserController',
                 'method' => 'login' ,
             ]
         ],
         '/registrate' => [
             'GET' => [
-                'class' => 'UserController',
+                'class' => 'Controller\UserController',
                 'method' => 'getRegisterForm' ,
             ],
             'POST' => [
-                'class' => 'UserController',
+                'class' => 'Controller\UserController',
                 'method' => 'register' ,
             ]
         ],
         '/catalog' => [
             'GET' => [
-                'class' => 'ProductController',
+                'class' => 'Controller\ProductController',
                 'method' => 'getCatalog' ,
             ],
             'POST' => [
-                'class' => 'ProductController',
+                'class' => 'Controller\ProductController',
                 'method' => 'addProduct' ,
             ]
             ],
         '/cart' => [
             'GET' => [
-                'class' => 'CartController',
+                'class' => 'Controller\CartController',
                 'method' => 'getCart' ,
             ]
             ],
         '/order' => [
             'GET' => [
-                'class' => 'OrderController',
+                'class' => 'Controller\OrderController',
                 'method' => 'getOrderForm' ,
             ],
             'POST' => [
-                'class' => 'OrderController',
+                'class' => 'Controller\OrderController',
                 'method' => 'createOrder' ,
             ]
             ]

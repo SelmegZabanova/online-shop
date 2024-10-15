@@ -1,6 +1,10 @@
 <?php
-require_once './../Model/Order.php';
-require_once './../Model/ProductsInOrder.php';
+//require_once './../Model/Order.php';
+//require_once './../Model/ProductsInOrder.php';
+namespace Controller;
+use Model\Product;
+use Model\Order;
+use Model\ProductsInOrder;
 class OrderController
 {
     private Product $product;
@@ -54,10 +58,8 @@ public function createOrder()
         }
 
     } else {
-        session_start();
-        $user_id = $_SESSION['user_id'];
 
-        $productsInCart = $this->product->showCart($user_id);
+
         $totalPrice = $this->product->getTotalPrice();
         require_once './../View/order.php';
     }

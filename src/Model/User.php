@@ -1,9 +1,9 @@
 <?php
-require_once './../Model/Database.php';
+namespace Model;
 
 class User
 {
-    private PDO $pdo;
+    private \PDO $pdo;
     public function __construct()
     {
         $pdo = new Database();

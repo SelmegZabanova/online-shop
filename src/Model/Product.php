@@ -1,9 +1,8 @@
 <?php
-require_once './../Model/Database.php';
-
+namespace Model;
 class Product
 {
-    private PDO $pdo;
+    private \PDO $pdo;
     public function __construct()
     {
         $pdo = new Database();

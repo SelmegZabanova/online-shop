@@ -4,14 +4,9 @@ namespace Model;
 
 
 
-class Order
+class Order extends Model
 {
-    private \PDO $pdo;
-    public function __construct()
-    {
-        $pdo = new Database();
-        $this->pdo = $pdo->connect();
-    }
+
     public function createOrder(int $user_id , string $name, string $email, int $phone, int $sum):int
     {
 

@@ -1,20 +1,6 @@
 <?php
+namespace Core;
 
-$autoload = function ( string $className) {
-   $array = explode("\\", $className);
-   $nameSpace = $array[0];
-   $class = $array[1];
-   $path = "./../$nameSpace/$class.php";
-    if(file_exists($path)) {
-        require_once $path;
-
-        return true;
-    }
-
-    return false;
-};
-
-spl_autoload_register($autoload);
 
 class App
 {
@@ -79,6 +65,8 @@ class App
                 $object = new $this->routes[$requestUri][$requestMethod]['class'];
                 $method = $this->routes[$requestUri][$requestMethod]['method'];
                 $object->$method();
+            }else{
+                http_response_code(405);
             }
         } else {
             http_response_code(404);

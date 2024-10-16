@@ -1,13 +1,7 @@
 <?php
 namespace Model;
-class UserProduct
+class UserProduct extends Model
 {
-    private \PDO $pdo;
-    public function __construct()
-    {
-        $pdo = new Database();
-        $this->pdo = $pdo->connect();
-    }
     public function select($user_id, $product_id)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM user_products WHERE user_id = :user_id AND product_id = :product_id");

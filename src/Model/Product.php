@@ -1,13 +1,8 @@
 <?php
 namespace Model;
-class Product
+class Product extends Model
 {
-    private \PDO $pdo;
-    public function __construct()
-    {
-        $pdo = new Database();
-        $this->pdo = $pdo->connect();
-    }
+
     public function showCatalog()
     {
 

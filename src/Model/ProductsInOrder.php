@@ -1,14 +1,9 @@
 <?php
 namespace Model;
 
-class ProductsInOrder
+class ProductsInOrder extends Model
 {
-    private \PDO $pdo;
-    public function __construct()
-    {
-        $pdo = new Database();
-        $this->pdo = $pdo->connect();
-    }
+
     public function GetProductsInOrder(int $order_id, int $product_id, int $amount)
     {
 

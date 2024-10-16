@@ -1,14 +1,9 @@
 <?php
 namespace Model;
 
-class User
+class User extends Model
 {
-    private \PDO $pdo;
-    public function __construct()
-    {
-        $pdo = new Database();
-        $this->pdo = $pdo->connect();
-    }
+
     public function create(string $name, string $email, string $password)
     {
 

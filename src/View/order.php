@@ -43,11 +43,11 @@
         <h2>Order Information</h2>
         <div class="row">
             <?php foreach ($productsInCart as $product): ?>
-            <h3> Products to order:<?php echo $product['name']; ?></h3>
+            <h3> Products to order:<?php echo $product->getName(); ?></h3>
 
         </div>
         <div class="row">
-            <h3>Amount: <?php echo $product['amount']; ?></h3>
+            <h3>Amount: <?php echo $product->getAmount(); ?></h3>
             <?php endforeach; ?>
             <h2> Total price: <?php echo $totalPrice . '$'; ?></h2>
 

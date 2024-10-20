@@ -1,60 +1,20 @@
 <?php
+
 namespace Core;
 
 
 class App
 {
-    private array $routes = [
-        '/login' => [
-            'GET' => [
-                'class' => 'Controller\UserController',
-                'method' => 'getLoginForm' ,
-            ],
-            'POST' => [
-                'class' => 'Controller\UserController',
-                'method' => 'login' ,
-            ]
-        ],
-        '/registrate' => [
-            'GET' => [
-                'class' => 'Controller\UserController',
-                'method' => 'getRegisterForm' ,
-            ],
-            'POST' => [
-                'class' => 'Controller\UserController',
-                'method' => 'register' ,
-            ]
-        ],
-        '/catalog' => [
-            'GET' => [
-                'class' => 'Controller\ProductController',
-                'method' => 'getCatalog' ,
-            ],
-            'POST' => [
-                'class' => 'Controller\ProductController',
-                'method' => 'addProduct' ,
-            ]
-            ],
-        '/cart' => [
-            'GET' => [
-                'class' => 'Controller\CartController',
-                'method' => 'getCart' ,
-            ]
-            ],
-        '/order' => [
-            'GET' => [
-                'class' => 'Controller\OrderController',
-                'method' => 'getOrderForm' ,
-            ],
-            'POST' => [
-                'class' => 'Controller\OrderController',
-                'method' => 'createOrder' ,
-            ]
-            ]
-        ];
+    private array $routes = [];
+
+    public function addRoute(string $uri, string $method, string $className, string $classMethod): void
+    {
+        $this->routes[$uri][$method]['class'] = $className;
+        $this->routes[$uri][$method]['method'] = $classMethod;
+    }
 
 
-    public function run()
+    public function run():void
     {
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
@@ -64,14 +24,23 @@ class App
 
                 $object = new $this->routes[$requestUri][$requestMethod]['class'];
                 $method = $this->routes[$requestUri][$requestMethod]['method'];
-                $object->$method();
+                if($requestMethod === "POST") {
+                    $requestType = mb_substr($requestUri,1);
+                    $requestType = ucfirst($requestType);
+                    $requestClassname = "Request"."\\".$requestType."Request";
+                    $request = new $requestClassname($requestUri, $requestMethod, $_POST);
+                    $object->$method($request);
+                } else {
+                    $object->$method();
+                }
+
             }else{
                 http_response_code(405);
             }
         } else {
             http_response_code(404);
-            require_once './404.php';
+            require_once '../View/404.php';
         }
     }
 
-};
+}

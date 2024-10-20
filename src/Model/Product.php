@@ -2,30 +2,57 @@
 namespace Model;
 class Product extends Model
 {
+    private int $id;
+    private string $image;
+    private string $name;
+    private string $description;
+    private string $price;
 
-    public function showCatalog()
+
+    public function showCatalog(): array|null
     {
 
         $stmt = $this->pdo->query("SELECT * FROM products");
-        return $stmt->fetchAll();
-    }
-    public function showCart($user_id):array|false
-    {
-
-        $stmt = $this->pdo->prepare("SELECT * FROM products INNER JOIN user_products ON products.id = user_products.product_id WHERE user_products.user_id = :user_id");
-        $stmt->execute(['user_id' => $user_id]);
         $data = $stmt->fetchAll();
-        return $data;
-    }
-    public function getTotalPrice()
-    {
-        $user_id = $_SESSION['user_id'];
-        $data = $this->showCart($user_id);
-        $result = 0;
-        foreach ($data as $value) {
-            $multi = $value['amount'] * (int)$value['price'];
-            $result += $multi;
+        if($data === false) {
+            return null;
         }
-        return $result;
+        foreach($data as $product) {
+            $obj = new Product();
+            $obj->id = $product["id"];
+            $obj->image = $product["image"];
+            $obj->name = $product["name"];
+            $obj->description = $product["description"];
+            $obj->price = $product["price"];
+
+            $products[]=$obj;
+        }
+        return $products;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getImage(): string
+    {
+        return $this->image;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function getPrice(): string
+    {
+        return $this->price;
     }
 }
+

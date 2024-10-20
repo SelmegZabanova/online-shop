@@ -1,9 +1,6 @@
 <?php
 namespace Model;
 
-
-
-
 class Order extends Model
 {
 
@@ -13,7 +10,8 @@ class Order extends Model
 
         $stmt = $this->pdo->prepare('INSERT INTO orders (user_id, name, email, phone, sum) VALUES (:user_id, :name, :email, :phone, :sum) RETURNING id ');
         $stmt->execute(["user_id" => $user_id, 'name' => $name, 'email' => $email, 'phone' => $phone, 'sum' => $sum]);
-        $result = $stmt->fetch();
-        return $result['id'];
+        $orderId = $stmt->fetch();
+        return $orderId['id'];
     }
+
 }

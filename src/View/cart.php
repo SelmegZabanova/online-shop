@@ -2,24 +2,25 @@
 <div class="container">
     <h3>Корзина</h3>
     <div class="card-deck">
+        <?php if(!is_null($productsInCart)): ?>
         <?php foreach ($productsInCart as $product): ?>
             <div class="card text-center">
                 <a href="#">
-                    <img class="card-img-top" src="<?php echo $product['image']; ?>" alt="Card image">
+                    <img class="card-img-top" src="<?= $product->getImage(); ?>" alt="Card image">
                     <div class="card-body">
-                        <p class="card-text text-muted"><?php echo $product['name']; ?></p>
+                        <p class="card-text text-muted"><?= $product->getName(); ?></p>
                         <div class="card-footer">
-                            <?php echo $product['price']; ?>
+                            <?= $product->getPrice(); ?>
                         </div>
-                        <p class="card-text text-muted"><?php echo $product['amount']; ?></p>
-                        <?php endforeach; ?>
+                        <p class="card-text text-muted"><?=$product->getAmount(); ?></p>
                     </div>
-                    <h2><?php echo  'Total Price ' . $totalPrice.'$'; ?></h2>
-
-                    <a href="./order" class="register" target="blank">Order</a>
                 </a>
             </div>
+        <?php endforeach; ?>
+        <h2><?php echo  'Total Price ' . $totalPrice.'$'; ?></h2>
+        <?php endif;?>
 
+        <a href="./order" class="register" target="blank">Order</a>
     </div>
 </div>
 

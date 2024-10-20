@@ -21,6 +21,7 @@ class ProductController
         } else {
 
             $products = $this->product->showCatalog();
+            require_once './../View/catalog.php';
 
         }
         require_once './../View/catalog.php';
@@ -39,7 +40,7 @@ class ProductController
             }
 
             $result = $this->userProduct->select($user_id, $product_id);
-            if(empty($result)) {
+            if(!$result) {
                 $this->userProduct->add($user_id, $product_id, $amount);
             } else {
                $this->userProduct->addMore($user_id, $product_id, $amount);

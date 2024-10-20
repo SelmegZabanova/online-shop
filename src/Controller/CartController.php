@@ -2,16 +2,16 @@
 
 namespace Controller;
 
-use Model\Product;
+use Model\UserProduct;
 
 class CartController
 {
-    private Product $product;
+    private UserProduct $userProduct;
     public function __construct()
     {
-        $this->product = new Product();
+        $this->userProduct = new UserProduct();
     }
-    public function getCart()
+    public function getCart():void
     {
         session_start();
         if (!isset($_SESSION['user_id'])) {
@@ -19,9 +19,20 @@ class CartController
         } else {
             $user_id = $_SESSION['user_id'];
 
-            $productsInCart = $this->product->showCart($user_id);
-            $totalPrice = $this->product->getTotalPrice();
+            $productsInCart = $this->userProduct->showCart($user_id);
+            if(!is_null($productsInCart)){
+                $totalPrice = $this->getTotalPrice($productsInCart);
+            }
+
         }
         require_once './../View/cart.php';
+    }
+    public function getTotalPrice(array $productsInCart):float
+    {
+        $result = 0;
+        foreach ($productsInCart as $product) {
+            $result += $product->getAmount() * $product->getPrice();
+        }
+        return $result;
     }
 }

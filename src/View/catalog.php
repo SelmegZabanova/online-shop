@@ -2,23 +2,24 @@
 <div class="container">
     <h3>Catalog</h3>
     <div class="card-deck">
+        <?php if(!is_null($products)): ?>
         <?php foreach ($products as $product):?>
         <div class="card text-center">
             <a href="#">
                 <div class="card-header">
                     Hit!
                 </div>
-                <img class="card-img-top" src="<?= $product['image']; ?> " alt="Card image">
+                <img class="card-img-top" src="<?= $product->getImage(); ?> " alt="Card image">
                 <div class="card-body">
-                    <p class="card-text text-muted"> <?= $product['description']; ?></p>
-                    <a href="#"><h5 class="card-title"> <?= ($product['name']); ?> </h5></a>
+                    <p class="card-text text-muted"> <?= $product->getDescription(); ?></p>
+                    <a href="#"><h5 class="card-title"> <?= $product->getName(); ?> </h5></a>
                     <div class="card-footer">
-                        <?php print_r($product['price']); ?>
+                        <?= $product->getPrice(); ?>
                     </div>
                 </div>
             </a>
             <form action="/catalog" method="post">
-                <input type ="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                <input type ="hidden" name="product_id" value="<?php echo $product->getId(); ?>">
                 <label>
                 <input type="number" name="amount" value="1" min="1" max="100" >
             </label>
@@ -26,32 +27,7 @@
             </form>
         </div>
         <?php endforeach;?>
-    </div>
-    <div class="card-deck">
-        <?php foreach ($products as $product):?>
-            <div class="card text-center">
-                <a href="#">
-                    <div class="card-header">
-                        Hit!
-                    </div>
-                    <img class="card-img-top" src="<?= $product['image']; ?> " alt="Card image">
-                    <div class="card-body">
-                        <p class="card-text text-muted"> <?= $product['description']; ?></p>
-                        <a href="#"><h5 class="card-title"> <?= ($product['name']); ?> </h5></a>
-                        <div class="card-footer">
-                            <?php print_r($product['price']); ?>
-                        </div>
-                    </div>
-                </a>
-                <form action="/add_product" method="post">
-                    <input type ="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-                    <label>
-                        <input type="number" name="amount" value="1" min="1" max="100" >
-                    </label>
-                    <input type="submit" value="Добавить в корзину">
-                </form>
-            </div>
-        <?php endforeach;?>
+        <?php endif;?>
     </div>
 </div>
 <style>

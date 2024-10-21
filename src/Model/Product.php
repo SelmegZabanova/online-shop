@@ -7,13 +7,14 @@ class Product extends Model
     private string $name;
     private string $description;
     private string $price;
+    private int $amount;
 
-
-    public function showCatalog(): array|null
+    public function getAllProducts(): array|null
     {
 
         $stmt = $this->pdo->query("SELECT * FROM products");
         $data = $stmt->fetchAll();
+        $products=[];
         if($data === false) {
             return null;
         }
@@ -24,6 +25,29 @@ class Product extends Model
             $obj->name = $product["name"];
             $obj->description = $product["description"];
             $obj->price = $product["price"];
+
+            $products[]=$obj;
+        }
+        return $products;
+    }
+    public function getCartByUser($user_id): array|null
+    {
+
+        $stmt = $this->pdo->prepare("SELECT * FROM products INNER JOIN user_products ON products.id = user_products.product_id WHERE user_products.user_id = :user_id");
+        $stmt->execute(['user_id' => $user_id]);
+        $data = $stmt->fetchAll();
+        $products = [];
+        if($data === false) {
+            return null;
+        }
+        foreach($data as $product) {
+            $obj = new self();
+            $obj->id = $product["product_id"];
+            $obj->image = $product["image"];
+            $obj->name = $product["name"];
+            $obj->description = $product["description"];
+            $obj->price = $product["price"];
+            $obj->amount = $product["amount"];
 
             $products[]=$obj;
         }
@@ -53,6 +77,11 @@ class Product extends Model
     public function getPrice(): string
     {
         return $this->price;
+    }
+
+    public function getAmount(): int
+    {
+        return $this->amount;
     }
 }
 

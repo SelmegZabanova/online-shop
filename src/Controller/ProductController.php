@@ -20,7 +20,7 @@ class ProductController
             header("Location:/login");
         } else {
 
-            $products = $this->product->showCatalog();
+            $products = $this->product->getAllProducts();
             require_once './../View/catalog.php';
 
         }
@@ -39,7 +39,7 @@ class ProductController
                 $amount = $_POST['amount'];
             }
 
-            $result = $this->userProduct->select($user_id, $product_id);
+            $result = $this->userProduct->checkUserExist($user_id, $product_id);
             if(!$result) {
                 $this->userProduct->add($user_id, $product_id, $amount);
             } else {

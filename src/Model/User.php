@@ -8,7 +8,7 @@ class User extends Model
     private string $email;
     private string $password;
 
-    public function create(string $name, string $email, string $password)
+    public function create(string $name, string $email, string $password): void
     {
 
         $stmt = $this->pdo->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');

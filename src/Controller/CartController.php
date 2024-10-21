@@ -2,14 +2,15 @@
 
 namespace Controller;
 
-use Model\UserProduct;
+use Model\Product;
+
 
 class CartController
 {
-    private UserProduct $userProduct;
+    private Product $product;
     public function __construct()
     {
-        $this->userProduct = new UserProduct();
+        $this->product = new Product();
     }
     public function getCart():void
     {
@@ -19,7 +20,7 @@ class CartController
         } else {
             $user_id = $_SESSION['user_id'];
 
-            $productsInCart = $this->userProduct->showCart($user_id);
+            $productsInCart = $this->product->getCartByUser($user_id);
             if(!is_null($productsInCart)){
                 $totalPrice = $this->getTotalPrice($productsInCart);
             }

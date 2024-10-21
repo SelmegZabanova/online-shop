@@ -1,21 +1,19 @@
 <?php
-//require_once './../Model/Order.php';
-//require_once './../Model/ProductsInOrder.php';
 namespace Controller;
-use Model\UserProduct;
-use Model\Order;
-use Model\ProductsInOrder;
+use DTO\CreateOrderDTO;
 use Request\OrderRequest;
+use Service\OrderService;
+use Model\Product;
 class OrderController
 {
-    private UserProduct $userProduct;
-    private Order $order;
-    private ProductsInOrder $productsInOrder;
+
+    private OrderService $orderService;
+    private Product $product;
     public function __construct()
     {
-        $this->userProduct = new UserProduct();
-        $this->order = new Order();
-        $this->productsInOrder = new ProductsInOrder();
+
+        $this->orderService = new OrderService();
+        $this->product = new Product();
     }
 public function getOrderForm()
 {
@@ -25,7 +23,7 @@ public function getOrderForm()
     } else {
         $user_id = $_SESSION['user_id'];
 
-        $productsInCart = $this->userProduct->showCart($user_id);
+        $productsInCart = $this->product->getCartByUser($user_id);
         if($productsInCart !== null){
             $totalPrice = $this->getTotalPrice($productsInCart);
         }
@@ -38,7 +36,7 @@ public function createOrder(OrderRequest $orderRequest)
     $user_id = $_SESSION['user_id'];
 
     $errors = $orderRequest->validateOrder($orderRequest);
-    $productsInCart = $this->userProduct->showCart($user_id);
+    $productsInCart = $this->product->getCartByUser($user_id);
 
     if(empty($errors)) {
         if(!is_null($productsInCart))
@@ -47,14 +45,9 @@ public function createOrder(OrderRequest $orderRequest)
             $email = $orderRequest->getEmail();
             $phone = $orderRequest->getPhone();
             $sum = $this->getTotalPrice($productsInCart);
+            $DTO = new CreateOrderDTO($user_id, $name, $email, $phone, $sum);
+            $this->orderService->create($DTO);
 
-            $order_id = $this->order->createOrder($user_id , $name, $email, $phone, $sum);
-            $productsInCart = $this->userProduct->showCart($user_id);
-            foreach( $productsInCart as $value) {
-
-                $this->productsInOrder->GetProductsInOrder($order_id, $value->getId(),$value->getAmount());
-
-            }
         }
     } else {
 

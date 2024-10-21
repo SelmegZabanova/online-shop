@@ -9,8 +9,7 @@ class ProductsInOrder extends Model
 
         $stmt = $this->pdo->prepare('INSERT INTO products_in_order (order_id, product_id, amount) VALUES (:order_id, :product_id, :amount)');
         $stmt->execute(["order_id" => $order_id, 'product_id' => $product_id, 'amount' => $amount]);
-        $result = $stmt->fetch();
-        return $result;
+
     }
 
 

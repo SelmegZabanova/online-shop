@@ -44,7 +44,7 @@ class UserController
 }
     public function login(LoginRequest $loginRequest)
     {
-        $errors = $loginRequest->validateLogin($loginRequest);
+        $errors = $loginRequest->validateLogin();
         if (empty($errors)) {
             $email = $loginRequest->getEmail();
             $password = $loginRequest->getPassword();

@@ -12,9 +12,9 @@ class LoginRequest extends Request
     {
         return $this->data['password'] ?? null;
     }
-    public function validateLogin(LoginRequest $loginRequest): array
+    public function validateLogin(): array
     {
-        $data = $loginRequest->getData();
+        $data = $this->getData();
         $errors = [];
         if(isset($data['email'])) {
             $email = $data['email'];

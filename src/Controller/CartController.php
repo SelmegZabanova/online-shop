@@ -3,14 +3,16 @@
 namespace Controller;
 
 use Model\Product;
-
+use Service\ProductService;
 
 class CartController
 {
     private Product $product;
+    private ProductService $productService;
     public function __construct()
     {
         $this->product = new Product();
+        $this->productService = new ProductService();
     }
     public function getCart():void
     {
@@ -22,18 +24,11 @@ class CartController
 
             $productsInCart = $this->product->getCartByUser($user_id);
             if(!is_null($productsInCart)){
-                $totalPrice = $this->getTotalPrice($productsInCart);
+                $totalPrice = $this->productService->getTotalPrice($productsInCart);
             }
 
         }
         require_once './../View/cart.php';
     }
-    public function getTotalPrice(array $productsInCart):float
-    {
-        $result = 0;
-        foreach ($productsInCart as $product) {
-            $result += $product->getAmount() * $product->getPrice();
-        }
-        return $result;
-    }
+
 }

@@ -3,17 +3,20 @@ namespace Controller;
 use DTO\CreateOrderDTO;
 use Request\OrderRequest;
 use Service\OrderService;
+use Service\ProductService;
 use Model\Product;
 class OrderController
 {
 
     private OrderService $orderService;
+    private ProductService $productService;
     private Product $product;
     public function __construct()
     {
 
         $this->orderService = new OrderService();
         $this->product = new Product();
+        $this->productService = new ProductService();
     }
 public function getOrderForm()
 {
@@ -25,7 +28,7 @@ public function getOrderForm()
 
         $productsInCart = $this->product->getCartByUser($user_id);
         if($productsInCart !== null){
-            $totalPrice = $this->getTotalPrice($productsInCart);
+            $totalPrice = $this->productService->getTotalPrice($productsInCart);
         }
     }
     require_once './../View/order.php';
@@ -44,25 +47,19 @@ public function createOrder(OrderRequest $orderRequest)
             $name = $orderRequest->getName();
             $email = $orderRequest->getEmail();
             $phone = $orderRequest->getPhone();
-            $sum = $this->getTotalPrice($productsInCart);
-            $DTO = new CreateOrderDTO($user_id, $name, $email, $phone, $sum);
+            $sum = $this->productService->getTotalPrice($productsInCart);
+            $pdo = $this->product->getPDO();
+            $DTO = new CreateOrderDTO($user_id, $name, $email, $phone, $sum, $pdo);
             $this->orderService->create($DTO);
 
         }
     } else {
 
 
-        $totalPrice = $this->getTotalPrice($productsInCart);
+        $totalPrice = $this->productService->getTotalPrice($productsInCart);
         require_once './../View/order.php';
     }
 }
-    public function getTotalPrice(array $productsInCart):float
-    {
-        $result = 0;
-        foreach ($productsInCart as $product) {
-            $result += $product->getAmount() * $product->getPrice();
-        }
-        return $result;
-    }
+
 
 }

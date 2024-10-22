@@ -1,10 +1,6 @@
 <?php
 
 namespace Core;
-
-
-use http\Client\Request;
-
 class App
 {
     private array $routes = [];
@@ -31,7 +27,24 @@ class App
 
                 if (!empty($requestClass)) {
                     $request = new $requestClass($requestUri, $requestMethod, $_POST);
-                    $object->$method($request);
+                    try{
+                        $object->$method($request);
+                    } catch(\Throwable $exception) {
+                        $message = $exception->getMessage();
+                        $file = $exception->getFile();
+                        $line = $exception->getLine();
+
+                        $errorFile = './../Storage/Log/error.txt';
+
+                        file_put_contents($errorFile, $message, FILE_APPEND);
+                        file_put_contents($errorFile, $file, FILE_APPEND);
+                        file_put_contents($errorFile, $line, FILE_APPEND);
+
+                        http_response_code(500);
+                        require_once '../View/500.php';
+
+                    }
+
                 } else {
                     $object->$method();
                 }

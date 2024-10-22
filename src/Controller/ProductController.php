@@ -4,14 +4,16 @@
 namespace Controller;
 use Model\Product;
 use Model\UserProduct;
+use Service\ProductService;
+
 class ProductController
 {
     private Product $product;
-    private UserProduct $userProduct;
+    private ProductService $productService;
     public function __construct()
     {
         $this->product = new Product();
-        $this->userProduct = new UserProduct();
+        $this->productService = new ProductService();
     }
     public function getCatalog()
     {
@@ -38,13 +40,9 @@ class ProductController
             } else {
                 $amount = $_POST['amount'];
             }
+            $this->productService->add($user_id, $product_id,$amount);
 
-            $result = $this->userProduct->checkUserExist($user_id, $product_id);
-            if(!$result) {
-                $this->userProduct->add($user_id, $product_id, $amount);
-            } else {
-               $this->userProduct->addMore($user_id, $product_id, $amount);
-            }
+
             header("Location:/catalog");
         }
     }

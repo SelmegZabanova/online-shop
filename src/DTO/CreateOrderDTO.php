@@ -9,7 +9,8 @@ class CreateOrderDTO
         private string $name,
         private string $email,
         private string $phone,
-        private int $sum)
+        private int $sum,
+        private \PDO $pdo)
     {
     }
 
@@ -36,6 +37,11 @@ class CreateOrderDTO
     public function getSum(): int
     {
         return $this->sum;
+    }
+
+    public function getPdo(): \PDO
+    {
+        return $this->pdo;
     }
 
 }

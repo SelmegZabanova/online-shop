@@ -3,28 +3,30 @@
 namespace Controller;
 
 use Model\Product;
-use Service\ProductService;
+use Service\AuthService;
+use Service\CartService;
 
 class CartController
 {
-    private Product $product;
-    private ProductService $productService;
+    private CartService $cartService;
+    private AuthService $authService;
     public function __construct()
     {
-        $this->product = new Product();
-        $this->productService = new ProductService();
+        $this->cartService = new CartService();
+        $this->authService = new AuthService();
     }
     public function getCart():void
     {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
+
+        if (!$this->authService->check()) {
             header("Location: /login");
         } else {
-            $user_id = $_SESSION['user_id'];
+            $userId = $this->authService->getCurrentUser()->getId();
 
-            $productsInCart = $this->product->getCartByUser($user_id);
+
+            $productsInCart = Product::getCartByUser($userId);
             if(!is_null($productsInCart)){
-                $totalPrice = $this->productService->getTotalPrice($productsInCart);
+                $totalPrice = $this->cartService->getTotalPrice($productsInCart);
             }
 
         }

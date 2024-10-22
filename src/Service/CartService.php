@@ -5,7 +5,7 @@ namespace Service;
 use Model\UserProduct;
 use Model\Product;
 
-class ProductService
+class CartService
 {
     private UserProduct $userProduct;
     private Product $product;

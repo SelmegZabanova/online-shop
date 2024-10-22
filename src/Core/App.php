@@ -1,6 +1,8 @@
 <?php
 
 namespace Core;
+use Service\LoggerService;
+
 class App
 {
     private array $routes = [];
@@ -30,15 +32,7 @@ class App
                     try{
                         $object->$method($request);
                     } catch(\Throwable $exception) {
-                        $message = $exception->getMessage();
-                        $file = $exception->getFile();
-                        $line = $exception->getLine();
-
-                        $errorFile = './../Storage/Log/error.txt';
-
-                        file_put_contents($errorFile, $message, FILE_APPEND);
-                        file_put_contents($errorFile, $file, FILE_APPEND);
-                        file_put_contents($errorFile, $line, FILE_APPEND);
+                        LoggerService::record($exception);
 
                         http_response_code(500);
                         require_once '../View/500.php';

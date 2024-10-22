@@ -4,14 +4,17 @@ namespace Controller;
 use Model\User;
 use Request\LoginRequest;
 use Request\RegistrateRequest;
+use Service\AuthService;
 
 class UserController
 {
-    private User $user;
+    private AuthService $authService;
     public function __construct()
     {
-        $this->user = new User();
+        $this->authService = new AuthService();
     }
+
+
  public function getRegisterForm()
  {
      require_once './../View/registrate.php';
@@ -28,7 +31,7 @@ class UserController
             $password = $registrateRequest->getPassword();
             $hash = password_hash($password, PASSWORD_DEFAULT);
 
-            $this->user->create($name, $email, $hash);
+            User::create($name, $email, $hash);
 
             header("Location: /login");
         } else {
@@ -48,12 +51,8 @@ class UserController
         if (empty($errors)) {
             $email = $loginRequest->getEmail();
             $password = $loginRequest->getPassword();
-
-            $result = $this->user->getByEmail($email);
-
-            if (!empty($result) and password_verify($password, $result->getPassword())) {
-                session_start();
-                $_SESSION['user_id'] = $result->getId();
+            $result = $this->authService->login($email, $password);
+            if($result){
                 header('Location: /catalog');
             }
              if(isset($errors)) {

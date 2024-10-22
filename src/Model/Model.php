@@ -4,14 +4,14 @@ namespace Model;
 
 class Model
 {
-    protected \PDO $pdo ;
-    public function __construct()
+    protected static \PDO $pdo ;
+
+    public static function getPDO()
     {
-        $this->pdo = new \PDO('pgsql:host=postgres_db;port=5432;dbname=mydb', 'user', 'pass');
-    }
-    public function getPDO()
-    {
-        return $this->pdo;
+        if(!isset(self::$pdo)){
+            self::$pdo = new \PDO('pgsql:host=postgres_db;port=5432;dbname=mydb', 'user', 'pass');
+        }
+        return self::$pdo;
     }
 
 

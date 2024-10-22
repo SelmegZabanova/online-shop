@@ -2,31 +2,32 @@
 namespace Controller;
 use DTO\CreateOrderDTO;
 use Request\OrderRequest;
+use Service\AuthService;
 use Service\OrderService;
-use Service\ProductService;
+use Service\CartService;
 use Model\Product;
 class OrderController
 {
 
     private OrderService $orderService;
-    private ProductService $productService;
-    private Product $product;
+    private CartService $productService;
+    private AuthService $authService;
     public function __construct()
     {
 
         $this->orderService = new OrderService();
-        $this->product = new Product();
-        $this->productService = new ProductService();
+
+        $this->productService = new CartService();
+        $this->authService = new AuthService();
     }
 public function getOrderForm()
 {
-    session_start();
-    if (!isset($_SESSION['user_id'])) {
+    if (!$this->authService->check()) {
         header("Location: /login");
     } else {
-        $user_id = $_SESSION['user_id'];
+        $userId = $this->authService->getCurrentUser()->getId();
 
-        $productsInCart = $this->product->getCartByUser($user_id);
+        $productsInCart = Product::getCartByUser($userId);
         if($productsInCart !== null){
             $totalPrice = $this->productService->getTotalPrice($productsInCart);
         }
@@ -35,11 +36,11 @@ public function getOrderForm()
 }
 public function createOrder(OrderRequest $orderRequest)
 {
-    session_start();
-    $user_id = $_SESSION['user_id'];
+
+    $userId = $this->authService->getCurrentUser()->getId();
 
     $errors = $orderRequest->validateOrder($orderRequest);
-    $productsInCart = $this->product->getCartByUser($user_id);
+    $productsInCart = Product::getCartByUser($userId);
 
     if(empty($errors)) {
         if(!is_null($productsInCart))
@@ -48,8 +49,8 @@ public function createOrder(OrderRequest $orderRequest)
             $email = $orderRequest->getEmail();
             $phone = $orderRequest->getPhone();
             $sum = $this->productService->getTotalPrice($productsInCart);
-            $pdo = $this->product->getPDO();
-            $DTO = new CreateOrderDTO($user_id, $name, $email, $phone, $sum, $pdo);
+
+            $DTO = new CreateOrderDTO($userId, $name, $email, $phone, $sum);
             $this->orderService->create($DTO);
 
         }

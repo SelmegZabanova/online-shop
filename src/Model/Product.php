@@ -9,10 +9,10 @@ class Product extends Model
     private string $price;
     private int $amount;
 
-    public function getAllProducts(): array|null
+    public static function getAllProducts(): array|null
     {
 
-        $stmt = $this->pdo->query("SELECT * FROM products");
+        $stmt = self::getPDO()->query("SELECT * FROM products");
         $data = $stmt->fetchAll();
         $products=[];
         if($data === false) {
@@ -30,10 +30,10 @@ class Product extends Model
         }
         return $products;
     }
-    public function getCartByUser($user_id): array|null
+    public static function getCartByUser($user_id): array|null
     {
 
-        $stmt = $this->pdo->prepare("SELECT * FROM products INNER JOIN user_products ON products.id = user_products.product_id WHERE user_products.user_id = :user_id");
+        $stmt = self::getPDO()->prepare("SELECT * FROM products INNER JOIN user_products ON products.id = user_products.product_id WHERE user_products.user_id = :user_id");
         $stmt->execute(['user_id' => $user_id]);
         $data = $stmt->fetchAll();
         $products = [];

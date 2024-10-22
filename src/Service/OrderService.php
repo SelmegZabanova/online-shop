@@ -7,6 +7,7 @@ use Model\Product;
 use Model\ProductsInOrder;
 use Model\Order;
 use Model\Model;
+use Model\UserProduct;
 
 class OrderService
 {
@@ -21,9 +22,9 @@ class OrderService
         $this->productsInOrder = new ProductsInOrder();
 
     }
-    public function create(CreateOrderDto $orderDTO)
+    public function create(CreateOrderDto $orderDTO): void
     {
-        $pdo = $orderDTO->getPDO();
+        $pdo = Model::getPdo();
         $pdo->beginTransaction();
         try {
             $order_id = $this->order->createOrder($orderDTO->getUserId(), $orderDTO->getName(), $orderDTO->getEmail(), $orderDTO->getPhone(), $orderDTO->getSum());
@@ -33,6 +34,7 @@ class OrderService
                 $this->productsInOrder->GetProductsInOrder($order_id, $value->getId(), $value->getAmount());
 
             }
+            UserProduct::clearCart($orderDTO->getUserId());
         } catch (\PDOException $exception) {
             $pdo->rollBack();
             throw $exception;

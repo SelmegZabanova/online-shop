@@ -3,7 +3,8 @@ require_once './../Core/Autoload.php';
 use Core\Autoload;
 use Core\App;
 Autoload::registrate(dirname(__DIR__,1));
-$app = new App();
+$loggerService = new \Service\Logger\LoggerFileService();
+$app = new App($loggerService);
 $app->addRoute('/login','GET', 'Controller\UserController', 'getLoginForm');
 $app->addRoute('/login','POST', 'Controller\UserController', 'login', \Request\LoginRequest::class);
 

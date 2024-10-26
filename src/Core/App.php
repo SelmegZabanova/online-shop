@@ -1,11 +1,20 @@
 <?php
 
 namespace Core;
-use Service\LoggerService;
+use Service\Auth\AuthSessionService;
+use Service\CartService;
+use Service\Logger\LoggerFileService;
+use Service\Logger\LoggerServiceInterface;
+use Service\OrderService;
 
 class App
 {
+    private LoggerServiceInterface $loggerService;
     private array $routes = [];
+    public function __construct(LoggerServiceInterface $loggerService)
+    {
+        $this->loggerService = $loggerService;
+    }
 
     public function addRoute(string $uri, string $method, string $className, string $classMethod, string $requestClass = null): void
     {
@@ -22,8 +31,12 @@ class App
 
         if (array_key_exists($requestUri, $this->routes)) {
             if (array_key_exists($requestMethod, $this->routes[$requestUri])) {
+                $class = $this->routes[$requestUri][$requestMethod]['class'];
+                $authService = new AuthSessionService();
+                $cartService = new CartService();
+                $orderService = new OrderService();
 
-                $object = new $this->routes[$requestUri][$requestMethod]['class'];
+                $object = new $class($authService, $cartService, $orderService);
                 $method = $this->routes[$requestUri][$requestMethod]['method'];
                 $requestClass = $this->routes[$requestUri][$requestMethod]['request'];
 
@@ -32,7 +45,11 @@ class App
                     try{
                         $object->$method($request);
                     } catch(\Throwable $exception) {
-                        LoggerService::record($exception);
+                        $this->loggerService->error('Произошла ошибка при обработке запроса',[
+                            'message' => $exception->getMessage(),
+                            'file' => $exception->getFile(),
+                            'line' => $exception->getLine()
+                        ]);
 
                         http_response_code(500);
                         require_once '../View/500.php';

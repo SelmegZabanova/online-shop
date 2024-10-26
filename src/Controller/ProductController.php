@@ -1,17 +1,18 @@
 <?php
 namespace Controller;
 use Model\Product;
-use Service\AuthService;
+use Service\Auth\AuthServiceInterface;
+use Service\Auth\AuthSessionService;
 use Service\CartService;
 
 class ProductController
 {
     private CartService $cartService;
-    private AuthService $authService;
-    public function __construct()
+    private AuthServiceInterface $authService;
+    public function __construct(AuthServiceInterface $authService, CartService $cartService)
     {
-        $this->cartService = new CartService();
-        $this->authService = new AuthService();
+        $this->authService = $authService;
+        $this->cartService = $cartService;
 
     }
     public function getCatalog()

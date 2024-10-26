@@ -1,24 +1,25 @@
 <?php
 namespace Controller;
 use DTO\CreateOrderDTO;
-use Request\OrderRequest;
-use Service\AuthService;
-use Service\OrderService;
-use Service\CartService;
 use Model\Product;
+use Request\OrderRequest;
+use Service\Auth\AuthServiceInterface;
+use Service\Auth\AuthSessionService;
+use Service\CartService;
+use Service\OrderService;
+
 class OrderController
 {
 
     private OrderService $orderService;
-    private CartService $productService;
-    private AuthService $authService;
-    public function __construct()
+    private CartService $cartService;
+    private AuthServiceInterface $authService;
+    public function __construct(AuthServiceInterface $authService,CartService $cartService, OrderService $orderService, )
     {
+        $this->authService = $authService;
+       $this->cartService = $cartService;
+        $this->orderService = $orderService;
 
-        $this->orderService = new OrderService();
-
-        $this->productService = new CartService();
-        $this->authService = new AuthService();
     }
 public function getOrderForm()
 {
@@ -29,7 +30,7 @@ public function getOrderForm()
 
         $productsInCart = Product::getCartByUser($userId);
         if($productsInCart !== null){
-            $totalPrice = $this->productService->getTotalPrice($productsInCart);
+            $totalPrice = $this->cartService->getTotalPrice($productsInCart);
         }
     }
     require_once './../View/order.php';
@@ -48,7 +49,7 @@ public function createOrder(OrderRequest $orderRequest)
             $name = $orderRequest->getName();
             $email = $orderRequest->getEmail();
             $phone = $orderRequest->getPhone();
-            $sum = $this->productService->getTotalPrice($productsInCart);
+            $sum = $this->cartService->getTotalPrice($productsInCart);
 
             $DTO = new CreateOrderDTO($userId, $name, $email, $phone, $sum);
             $this->orderService->create($DTO);
@@ -57,7 +58,7 @@ public function createOrder(OrderRequest $orderRequest)
     } else {
 
 
-        $totalPrice = $this->productService->getTotalPrice($productsInCart);
+        $totalPrice = $this->cartService->getTotalPrice($productsInCart);
         require_once './../View/order.php';
     }
 }

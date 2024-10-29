@@ -1,6 +1,7 @@
 <?php
 
 namespace Core;
+
 use Service\Auth\AuthSessionService;
 use Service\CartService;
 use Service\Logger\LoggerFileService;
@@ -18,6 +19,7 @@ class App
         $this->container = $container;
     }
 
+
     public function addRoute(string $uri, string $method, string $className, string $classMethod, string $requestClass = null): void
     {
         $this->routes[$uri][$method]['class'] = $className;
@@ -33,13 +35,16 @@ class App
 
         if (array_key_exists($requestUri, $this->routes)) {
             if (array_key_exists($requestMethod, $this->routes[$requestUri])) {
+
                 $class = $this->routes[$requestUri][$requestMethod]['class'];
                 $object = $this->container->get($class);
+
                 $method = $this->routes[$requestUri][$requestMethod]['method'];
                 $requestClass = $this->routes[$requestUri][$requestMethod]['request'];
 
                 if (!empty($requestClass)) {
                     $request = new $requestClass($requestUri, $requestMethod, $_POST);
+
                     try{
                         $object->$method($request);
                     } catch(\Throwable $exception) {
@@ -53,6 +58,7 @@ class App
                         require_once '../View/500.php';
 
                     }
+
 
                 } else {
                     $object->$method();

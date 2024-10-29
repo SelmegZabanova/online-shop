@@ -10,7 +10,9 @@
                     <div class="card-body">
                         <p class="card-text text-muted"><?= $product->getName(); ?></p>
                         <div class="card-footer">
+
                             <?= $product->getPrice().'$'; ?>
+
                         </div>
                         <p class="card-text text-muted"><?=$product->getAmount(); ?></p>
                     </div>

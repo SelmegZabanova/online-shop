@@ -3,6 +3,7 @@
 namespace Controller;
 
 use Model\Product;
+
 use Service\Auth\AuthServiceInterface;
 use Service\Auth\AuthSessionService;
 use Service\CartService;
@@ -29,10 +30,11 @@ class CartController
             $productsInCart = Product::getCartByUser($userId);
             if(!is_null($productsInCart)){
                 $totalPrice = $this->cartService->getTotalPrice($productsInCart);
+
+
             }
 
         }
         require_once './../View/cart.php';
     }
-
 }

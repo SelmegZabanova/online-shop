@@ -11,6 +11,7 @@ class CreateOrderDTO
         private string $phone,
         private int $sum,
     )
+
     {
     }
 
@@ -38,4 +39,5 @@ class CreateOrderDTO
     {
         return $this->sum;
     }
+
 }

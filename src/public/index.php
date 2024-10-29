@@ -1,6 +1,7 @@
 <?php
 require_once './../Core/Autoload.php';
 
+
 use Controller\ProductController;
 use Controller\UserController;
 use Core\Autoload;
@@ -39,6 +40,7 @@ $container->set(UserController::class, function (\Core\Container $container) {
     return new \Controller\UserController($authService);
 });
 $app = new App($loggerService, $container);
+
 $app->addRoute('/login','GET', 'Controller\UserController', 'getLoginForm');
 $app->addRoute('/login','POST', 'Controller\UserController', 'login', \Request\LoginRequest::class);
 

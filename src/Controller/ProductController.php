@@ -1,4 +1,5 @@
 <?php
+
 namespace Controller;
 use Model\Product;
 use Service\Auth\AuthServiceInterface;
@@ -22,23 +23,28 @@ class ProductController
         } else {
 
             $products = Product::getAllProducts();
+
             require_once './../View/catalog.php';
 
         }
         require_once './../View/catalog.php';
     }
     public function addProduct() {
+
         if(!$this->authService->check()) {
             header("Location:/login");
         } else {
             $userId = $this->authService->getCurrentUser()->getId();
+
             $product_id = $_POST['product_id'];
             if(empty($_POST['amount'])) {
                 $amount = 1;
             } else {
                 $amount = $_POST['amount'];
             }
+
             $this->cartService->add($userId, $product_id,$amount);
+
 
 
             header("Location:/catalog");

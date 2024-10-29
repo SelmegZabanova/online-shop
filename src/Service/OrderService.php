@@ -6,8 +6,10 @@ use DTO\CreateOrderDTO;
 use Model\Product;
 use Model\ProductsInOrder;
 use Model\Order;
+
 use Model\Model;
 use Model\UserProduct;
+
 
 class OrderService
 {
@@ -20,6 +22,7 @@ class OrderService
         $this->order = new Order();
         $this->product = new Product();
         $this->productsInOrder = new ProductsInOrder();
+
 
     }
     public function create(CreateOrderDto $orderDTO): void
@@ -40,6 +43,7 @@ class OrderService
             throw $exception;
         }
         $pdo->commit();
+
     }
 
 }

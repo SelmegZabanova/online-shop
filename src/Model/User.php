@@ -17,6 +17,7 @@ class User extends Model
     public static function getByEmail(string $email): ?User
     {
         $stmt = self::getPDO()->prepare('SELECT * FROM users WHERE email = :email');
+
         $stmt->execute(['email' => $email]);
         $data = $stmt->fetch();
         if($data === false){
@@ -28,6 +29,7 @@ class User extends Model
         $obj->email = $data['email'];
         $obj->password = $data['password'];
         return $obj;
+
     }
     public static function getById(int $user_id): ?User
     {
@@ -43,6 +45,7 @@ class User extends Model
         $obj->email = $data['email'];
         $obj->password = $data['password'];
         return $obj;
+
     }
 
     public function getId(): int

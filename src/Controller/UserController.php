@@ -4,6 +4,7 @@ namespace Controller;
 use Model\User;
 use Request\LoginRequest;
 use Request\RegistrateRequest;
+
 use Service\Auth\AuthServiceInterface;
 use Service\Auth\AuthSessionService;
 
@@ -14,7 +15,6 @@ class UserController
     {
         $this->authService = $authService;
     }
-
 
  public function getRegisterForm()
  {
@@ -31,8 +31,8 @@ class UserController
             $email = $registrateRequest->getEmail();
             $password = $registrateRequest->getPassword();
             $hash = password_hash($password, PASSWORD_DEFAULT);
-
             User::create($name, $email, $hash);
+
 
             header("Location: /login");
         } else {
@@ -52,8 +52,10 @@ class UserController
         if (empty($errors)) {
             $email = $loginRequest->getEmail();
             $password = $loginRequest->getPassword();
+
             $result = $this->authService->login($email, $password);
             if($result){
+
                 header('Location: /catalog');
             }
              if(isset($errors)) {

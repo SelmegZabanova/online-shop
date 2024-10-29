@@ -4,36 +4,37 @@ namespace Controller;
 
 use Model\Product;
 
+use Service\Auth\AuthServiceInterface;
+use Service\Auth\AuthSessionService;
+use Service\CartService;
 
 class CartController
 {
-    private Product $product;
-    public function __construct()
+    private CartService $cartService;
+    private AuthServiceInterface $authService;
+    public function __construct( AuthServiceInterface $authService, CartService $cartService)
     {
-        $this->product = new Product();
+        $this->authService = $authService;
+       $this->cartService = $cartService;
+
     }
     public function getCart():void
     {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
+
+        if (!$this->authService->check()) {
             header("Location: /login");
         } else {
-            $user_id = $_SESSION['user_id'];
+            $userId = $this->authService->getCurrentUser()->getId();
 
-            $productsInCart = $this->product->getCartByUser($user_id);
+
+            $productsInCart = Product::getCartByUser($userId);
             if(!is_null($productsInCart)){
-                $totalPrice = $this->getTotalPrice($productsInCart);
+                $totalPrice = $this->cartService->getTotalPrice($productsInCart);
+
+
             }
 
         }
         require_once './../View/cart.php';
-    }
-    public function getTotalPrice(array $productsInCart):float
-    {
-        $result = 0;
-        foreach ($productsInCart as $product) {
-            $result += $product->getAmount() * $product->getPrice();
-        }
-        return $result;
     }
 }

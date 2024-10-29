@@ -14,7 +14,9 @@
                     <p class="card-text text-muted"> <?= $product->getDescription(); ?></p>
                     <a href="#"><h5 class="card-title"> <?= $product->getName(); ?> </h5></a>
                     <div class="card-footer">
-                        <?= $product->getPrice(); ?>
+
+                        <?= $product->getPrice().'$'; ?>
+
                     </div>
                 </div>
             </a>

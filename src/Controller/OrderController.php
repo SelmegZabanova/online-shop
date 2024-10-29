@@ -1,42 +1,51 @@
 <?php
 namespace Controller;
 use DTO\CreateOrderDTO;
-use Request\OrderRequest;
-use Service\OrderService;
+
 use Model\Product;
+use Request\OrderRequest;
+use Service\Auth\AuthServiceInterface;
+use Service\Auth\AuthSessionService;
+use Service\CartService;
+use Service\OrderService;
+
 class OrderController
 {
 
     private OrderService $orderService;
-    private Product $product;
-    public function __construct()
-    {
 
-        $this->orderService = new OrderService();
-        $this->product = new Product();
+    private CartService $cartService;
+    private AuthServiceInterface $authService;
+    public function __construct(AuthServiceInterface $authService,CartService $cartService, OrderService $orderService, )
+    {
+        $this->authService = $authService;
+       $this->cartService = $cartService;
+        $this->orderService = $orderService;
+
     }
 public function getOrderForm()
 {
-    session_start();
-    if (!isset($_SESSION['user_id'])) {
+    if (!$this->authService->check()) {
         header("Location: /login");
     } else {
-        $user_id = $_SESSION['user_id'];
+        $userId = $this->authService->getCurrentUser()->getId();
 
-        $productsInCart = $this->product->getCartByUser($user_id);
+        $productsInCart = Product::getCartByUser($userId);
         if($productsInCart !== null){
-            $totalPrice = $this->getTotalPrice($productsInCart);
+            $totalPrice = $this->cartService->getTotalPrice($productsInCart);
+
         }
     }
     require_once './../View/order.php';
 }
 public function createOrder(OrderRequest $orderRequest)
 {
-    session_start();
-    $user_id = $_SESSION['user_id'];
+    $userId = $this->authService->getCurrentUser()->getId();
 
     $errors = $orderRequest->validateOrder($orderRequest);
-    $productsInCart = $this->product->getCartByUser($user_id);
+    $productsInCart = Product::getCartByUser($userId);
+
+  
 
     if(empty($errors)) {
         if(!is_null($productsInCart))
@@ -44,25 +53,21 @@ public function createOrder(OrderRequest $orderRequest)
             $name = $orderRequest->getName();
             $email = $orderRequest->getEmail();
             $phone = $orderRequest->getPhone();
-            $sum = $this->getTotalPrice($productsInCart);
-            $DTO = new CreateOrderDTO($user_id, $name, $email, $phone, $sum);
+
+            $sum = $this->cartService->getTotalPrice($productsInCart);
+
+            $DTO = new CreateOrderDTO($userId, $name, $email, $phone, $sum);
+
             $this->orderService->create($DTO);
 
         }
     } else {
 
-
-        $totalPrice = $this->getTotalPrice($productsInCart);
+        $totalPrice = $this->cartService->getTotalPrice($productsInCart);
         require_once './../View/order.php';
     }
 }
-    public function getTotalPrice(array $productsInCart):float
-    {
-        $result = 0;
-        foreach ($productsInCart as $product) {
-            $result += $product->getAmount() * $product->getPrice();
-        }
-        return $result;
-    }
+
+
 
 }

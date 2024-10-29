@@ -2,12 +2,23 @@
 
 namespace Core;
 
-
-use http\Client\Request;
+use Service\Auth\AuthSessionService;
+use Service\CartService;
+use Service\Logger\LoggerFileService;
+use Service\Logger\LoggerServiceInterface;
+use Service\OrderService;
 
 class App
 {
+    private LoggerServiceInterface $loggerService;
     private array $routes = [];
+    private Container $container;
+    public function __construct(LoggerServiceInterface $loggerService, Container $container)
+    {
+        $this->loggerService = $loggerService;
+        $this->container = $container;
+    }
+
 
     public function addRoute(string $uri, string $method, string $className, string $classMethod, string $requestClass = null): void
     {
@@ -25,13 +36,30 @@ class App
         if (array_key_exists($requestUri, $this->routes)) {
             if (array_key_exists($requestMethod, $this->routes[$requestUri])) {
 
-                $object = new $this->routes[$requestUri][$requestMethod]['class'];
+                $class = $this->routes[$requestUri][$requestMethod]['class'];
+                $object = $this->container->get($class);
+
                 $method = $this->routes[$requestUri][$requestMethod]['method'];
                 $requestClass = $this->routes[$requestUri][$requestMethod]['request'];
 
                 if (!empty($requestClass)) {
                     $request = new $requestClass($requestUri, $requestMethod, $_POST);
-                    $object->$method($request);
+
+                    try{
+                        $object->$method($request);
+                    } catch(\Throwable $exception) {
+                        $this->loggerService->error('Произошла ошибка при обработке запроса',[
+                            'message' => $exception->getMessage(),
+                            'file' => $exception->getFile(),
+                            'line' => $exception->getLine()
+                        ]);
+
+                        http_response_code(500);
+                        require_once '../View/500.php';
+
+                    }
+
+
                 } else {
                     $object->$method();
                 }

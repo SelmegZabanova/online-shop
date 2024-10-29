@@ -11,9 +11,11 @@ class App
 {
     private LoggerServiceInterface $loggerService;
     private array $routes = [];
-    public function __construct(LoggerServiceInterface $loggerService)
+    private Container $container;
+    public function __construct(LoggerServiceInterface $loggerService, Container $container)
     {
         $this->loggerService = $loggerService;
+        $this->container = $container;
     }
 
     public function addRoute(string $uri, string $method, string $className, string $classMethod, string $requestClass = null): void
@@ -32,11 +34,7 @@ class App
         if (array_key_exists($requestUri, $this->routes)) {
             if (array_key_exists($requestMethod, $this->routes[$requestUri])) {
                 $class = $this->routes[$requestUri][$requestMethod]['class'];
-                $authService = new AuthSessionService();
-                $cartService = new CartService();
-                $orderService = new OrderService();
-
-                $object = new $class($authService, $cartService, $orderService);
+                $object = $this->container->get($class);
                 $method = $this->routes[$requestUri][$requestMethod]['method'];
                 $requestClass = $this->routes[$requestUri][$requestMethod]['request'];
 

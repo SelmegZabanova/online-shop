@@ -1,19 +1,28 @@
 <?php
 
 namespace Controller;
+use DTO\CreateReviewDTO;
 use Model\Product;
+use Model\ProductsInOrder;
+use Model\Review;
+use Request\ReviewRequest;
 use Service\Auth\AuthServiceInterface;
-use Service\Auth\AuthSessionService;
 use Service\CartService;
+use Request\ProductRequest;
+use Service\OrderService;
+use Service\ReviewService;
 
 class ProductController
 {
     private CartService $cartService;
     private AuthServiceInterface $authService;
-    public function __construct(AuthServiceInterface $authService, CartService $cartService)
+
+    private ReviewService $productService;
+    public function __construct(AuthServiceInterface $authService, CartService $cartService,  ReviewService $productService)
     {
         $this->authService = $authService;
         $this->cartService = $cartService;
+        $this->productService = $productService;
 
     }
     public function getCatalog()
@@ -24,9 +33,11 @@ class ProductController
 
             $products = Product::getAllProducts();
 
+
             require_once './../View/catalog.php';
 
         }
+
         require_once './../View/catalog.php';
     }
     public function addProduct() {
@@ -50,5 +61,49 @@ class ProductController
             header("Location:/catalog");
         }
     }
+    public function getProductPage(ProductRequest $productRequest)
+    {
+        if (!$this->authService->check()) {
+            header("Location:/login");
+        } else {
+
+            $id = $productRequest->getProductId();
+                $product = Product::getProductById($id);
+                $reviews = Review::getAllReviewsByProductId($id);
+                if(!empty($reviews)){
+                    $averageRating = Review::getAverageRatingByProductId($id);
+                }
+                require_once './../View/product.php';
+            }
+
+            require_once './../View/product.php';
+
+    }
+    public function addReview( ReviewRequest $reviewRequest)
+    {
+        if (!$this->authService->check()) {
+            header("Location:/login");
+        }
+            $userId = $this->authService->getCurrentUser()->getId();
+            $userName = $this->authService->getCurrentUser()->getName();
+            $productId = $reviewRequest->getProductId();
+            $errors = $reviewRequest->validateReviewText();
+
+            if(empty($errors)) {
+                    $rating = $reviewRequest->getRating();
+                    $text = $reviewRequest->getReviewText();
+                    $result = ProductsInOrder::CheckProductInOrder($userId, $productId);
+                    if($result) {
+                        $dto = new CreateReviewDTO($userId, $userName,$productId, $rating, $text);
+                        $this->productService->addReview($dto);
+                        header("Location:/catalog");
+                    }
+                }
+                else {
+                    require_once './../View/catalog.php';
+               }
+               }
+
+
 
 }

@@ -12,8 +12,8 @@ class LoggerFileService implements LoggerServiceInterface
         $data["Datetime"]="$date";
 
         foreach($data as $value){
-            file_put_contents($errorFile, "$value \n", FILE_APPEND);
-            echo '\n';
+            file_put_contents($errorFile, "$value ", FILE_APPEND);
+
         }
     }
     public function info(string $message, array $data = [])
@@ -24,7 +24,7 @@ class LoggerFileService implements LoggerServiceInterface
         $data["Datetime"]="$date";
         foreach($data as $value){
             file_put_contents($infoFile, "$value \n", FILE_APPEND);
-            echo '\n';
+
         }
 
     }
@@ -36,7 +36,7 @@ class LoggerFileService implements LoggerServiceInterface
         $data["Datetime"]="$date";
         foreach($data as $value){
             file_put_contents($warningFile, "$value \n", FILE_APPEND);
-            echo '\n';
+
         }
     }
 

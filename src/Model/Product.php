@@ -57,6 +57,27 @@ class Product extends Model
         }
         return $products;
     }
+    public static function getProductById(int $id): ?Product
+    {
+        if (isset($_GET['id'])) {
+            $product_id = (int)$_GET['id'];
+        } else {
+            return null;
+        }
+        $stmt = self::getPDO()->prepare("SELECT * FROM products WHERE id = :id");
+        $stmt->execute(['id' => $product_id]);
+        $data = $stmt->fetch();
+        if ($data === false) {
+            return null;
+        }
+        $obj= new self();
+        $obj->id = $data['id'];
+        $obj->name = $data['name'];
+        $obj->description = $data['description'];
+        $obj->price = $data['price'];
+        return $obj;
+
+    }
 
     public function getId(): int
     {

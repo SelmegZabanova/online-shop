@@ -5,7 +5,7 @@
         <?php if(!is_null($products)): ?>
         <?php foreach ($products as $product):?>
         <div class="card text-center">
-            <a href="#">
+            <a href="/product?id=<?= $product->getId(); ?>">
                 <div class="card-header">
                     Hit!
                 </div>
@@ -21,7 +21,7 @@
                 </div>
             </a>
             <form action="/catalog" method="post">
-                <input type ="hidden" name="product_id" value="<?php echo $product->getId(); ?>">
+                <input type ="hidden" name="product_id" value="<?php echo $id = $product->getId(); ?>">
                 <label>
                 <input type="number" name="amount" value="1" min="1" max="100" >
             </label>

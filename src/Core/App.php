@@ -30,7 +30,7 @@ class App
 
     public function run(): void
     {
-        $requestUri = $_SERVER['REQUEST_URI'];
+        $requestUri = $this->getRequestUri();
         $requestMethod = $_SERVER['REQUEST_METHOD'];
 
         if (array_key_exists($requestUri, $this->routes)) {
@@ -43,8 +43,14 @@ class App
                 $requestClass = $this->routes[$requestUri][$requestMethod]['request'];
 
                 if (!empty($requestClass)) {
-                    $request = new $requestClass($requestUri, $requestMethod, $_POST);
-
+                    if($requestMethod === 'POST')
+                    {
+                        $request = new $requestClass($requestUri, $requestMethod, $_POST);
+                    }
+                    elseif($requestMethod === 'GET')
+                    {
+                        $request = new $requestClass($requestUri, $requestMethod, $_GET);
+                    }
                     try{
                         $object->$method($request);
                     } catch(\Throwable $exception) {
@@ -71,5 +77,18 @@ class App
             http_response_code(404);
             require_once '../View/404.php';
         }
+    }
+    public function getRequestUri(): string
+    {
+        $originalUri = $_SERVER['REQUEST_URI'];
+
+        $uri = strpos($originalUri, '?');
+
+        if ($uri !== false) {
+            $requestUri = substr($originalUri, 0, $uri);
+        } else {
+            $requestUri = $_SERVER['REQUEST_URI'];
+        }
+        return $requestUri;
     }
 }

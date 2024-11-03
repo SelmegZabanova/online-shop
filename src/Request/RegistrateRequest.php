@@ -16,9 +16,9 @@ class RegistrateRequest extends Request
     {
         return $this->data['psw'] ?? null;
     }
-    public function validateRegistration(RegistrateRequest $registrateRequest): array
+    public function validateRegistration(): array
     {
-        $data = $registrateRequest->getData();
+        $data = $this->getData();
         $errors = [];
         if(isset($data['name'])) {
             $name = $data['name'];

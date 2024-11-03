@@ -9,7 +9,7 @@ class CreateOrderDTO
         private string $name,
         private string $email,
         private string $phone,
-        private int $sum,
+        private int $sum
     )
 
     {
